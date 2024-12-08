@@ -134,3 +134,30 @@ void getout(unsigned char key, int x, int y) {
             break;
     }
 }
+
+void print_usage() {
+    printf("\nDiffusion Viewer Usage Commands:\n");
+    printf("--------------------------------\n");
+    printf("Image Processing:\n");
+    printf("  f - Run GPU forward diffusion\n");
+    printf("  s - Run GPU forward diffusion with shared memory\n");
+    printf("  r - Run GPU reverse diffusion\n");
+    printf("  F - Run CPU forward diffusion\n");
+    printf("  R - Run CPU reverse diffusion\n");
+    printf("\nImage Controls:\n");
+    printf("  i - Reset image to original pattern\n");
+    printf("  [ - Decrease image size by 256 pixels (min: 256x256)\n");
+    printf("  ] - Increase image size by 256 pixels (max: 4080x4080)\n");
+    printf("  , - Decrease beta value (noise factor)\n");
+    printf("  . - Increase beta value (noise factor)\n");
+    printf("\nPerformance Controls:\n");
+    printf("  - - Decrease threads per block by 4\n");
+    printf("  = - Increase threads per block by 4\n");
+    printf("\nApplication Control:\n");
+    printf("  q - Quit application\n");
+    printf("\nCurrent Settings:\n");
+    printf("  Image Size: %dx%d\n", get_width(), get_height());
+    printf("  Threads per Block: %dx%d\n", get_current_threads_per_block(), get_current_threads_per_block());
+    printf("  Beta Value: %.3f\n", get_beta());
+    printf("\n");
+}

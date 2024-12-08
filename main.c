@@ -20,6 +20,9 @@ int main(int argc, char **argv) {
     
     setup_the_view(WIDTH, HEIGHT);
     
+    // Print usage instructions
+    print_usage();
+    
     glutDisplayFunc(draw_stuff);
     glutKeyboardFunc(getout);
     glutReshapeFunc(reshape);
