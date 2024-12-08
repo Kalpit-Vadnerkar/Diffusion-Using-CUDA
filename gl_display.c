@@ -50,11 +50,12 @@ void getout(unsigned char key, int x, int y) {
     static int current_size = 512;
     static int threads = 16;
     int max_threads = get_max_threads_per_block();
+    float current_beta;
+    float beta_step = 0.05f;  // Amount to change beta by
     
     switch(key) {
         case 'i':
-            cuda_cleanup();
-            initCuda(get_width(), get_height(), threads);
+            reset_to_original();  // Replace initCuda call with reset_to_original
             glutPostRedisplay();
             break;
         case 'q':
@@ -115,6 +116,18 @@ void getout(unsigned char key, int x, int y) {
             break;
         case 'r':
             process_reverse_diffusion();
+            glutPostRedisplay();
+            break;
+        case ',':  // Decrease beta
+            current_beta = get_beta();
+            set_beta(current_beta - beta_step);
+            set_cpu_beta(current_beta - beta_step);
+            glutPostRedisplay();
+            break;
+        case '.':  // Increase beta
+            current_beta = get_beta();
+            set_beta(current_beta + beta_step);
+            set_cpu_beta(current_beta + beta_step);
             glutPostRedisplay();
             break;
         default:

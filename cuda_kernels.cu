@@ -1,6 +1,6 @@
 #include "cuda_kernels.cuh"
 
-__global__ void initializeImageKernel(float* d_image, int width, int height) {
+__global__ void generateCheckerPattern(float* d_pattern, int width, int height) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     
@@ -8,10 +8,11 @@ __global__ void initializeImageKernel(float* d_image, int width, int height) {
         int idx = (y * width + x) * 3;
         // Create a checkered pattern
         int checker = ((x / 32) + (y / 32)) % 2;
+        float value = checker ? 1.0f : 0.0f;
         
-        d_image[idx] = checker ? 1.0f : 0.0f;     // R
-        d_image[idx + 1] = checker ? 1.0f : 0.0f; // G
-        d_image[idx + 2] = checker ? 1.0f : 0.0f; // B
+        d_pattern[idx] = value;     // R
+        d_pattern[idx + 1] = value; // G
+        d_pattern[idx + 2] = value; // B
     }
 }
 
@@ -108,3 +109,27 @@ __global__ void reverseDiffusionKernel(
     }
 }
 
+__global__ void computeErrorKernel(
+    float* d_current_image,
+    float* d_reference_image,
+    float* d_error,
+    int width,
+    int height
+) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x < width && y < height) {
+        int idx = (y * width + x) * 3;
+        float sum_squared_error = 0.0f;
+        
+        // Compute squared error for each channel
+        for (int c = 0; c < 3; c++) {
+            float diff = d_current_image[idx + c] - d_reference_image[idx + c];
+            sum_squared_error += diff * diff;
+        }
+        
+        // Store average error for this pixel
+        d_error[y * width + x] = sum_squared_error / 3.0f;
+    }
+}

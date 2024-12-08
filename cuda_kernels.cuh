@@ -4,8 +4,16 @@
 #include <cuda_runtime.h>
 #include <curand_kernel.h>
 
-// Initialize the image with a pattern
-__global__ void initializeImageKernel(float* d_image, int width, int height);
+__global__ void generateCheckerPattern(float* d_pattern, int width, int height);
+
+// Compute error between current image and reference
+__global__ void computeErrorKernel(
+    float* d_current_image,
+    float* d_reference_image,
+    float* d_error,
+    int width,
+    int height
+);
 
 // Forward diffusion (adding noise)
 __global__ void forwardDiffusionKernel(

@@ -10,7 +10,17 @@ static float* image = NULL;
 static float* processed_image = NULL;
 static int width = 0;
 static int height = 0;
-static const float beta = 0.1f;
+static float beta = 0.1f;
+
+void set_cpu_beta(float new_beta) {
+    if (new_beta > 0.0f && new_beta < 1.0f) {
+        beta = new_beta;
+    }
+}
+
+float get_cpu_beta() {
+    return beta;
+}
 
 float generate_gaussian_noise() {
     float u1 = (float)rand() / RAND_MAX;
